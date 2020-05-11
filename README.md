@@ -62,3 +62,10 @@ curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}
 ```
 curl http://localhost:3001/peers
 ```
+
+### NOTES
+
+#### How to setup a GitHub organization, project and team
+
+https://github.com/collab-uniba/socialcde4eclipse/wiki/How-to-setup-a-GitHub-organization,-project-and-team
+
