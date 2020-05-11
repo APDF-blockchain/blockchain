@@ -1,5 +1,9 @@
 # Naivechain - a blockchain implementation in 200 lines of code
 
+### Notice
+This code was cloned from the "Simple Miner with Proof-of-Work in JS Extended" exercise 6 from 
+MI1OD: Blockchain Essentials - USA Self-paced Sept 2019 assignment
+
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
 
