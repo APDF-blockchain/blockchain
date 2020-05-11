@@ -114,6 +114,7 @@ var calculateHashForBlock = (block) => {
 };
 
 var calculateHash = (index, previousHash, timestamp, data, nonce) => {
+    // TODO: Proof Of Work is needed here.
     return CryptoJS.SHA256(index + previousHash + timestamp + data, nonce).toString();
 };
 
