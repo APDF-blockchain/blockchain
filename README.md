@@ -69,3 +69,10 @@ curl http://localhost:3001/peers
 
 https://github.com/collab-uniba/socialcde4eclipse/wiki/How-to-setup-a-GitHub-organization,-project-and-team
 
+#### Notes about the current implementation
+
+1. There is no proof-of-work.  We will need to modify the calculateHash() to do this. -dmp
+    It should be noted that the block hash has not yet nothing to do with mining, as there is no proof-of-work problem to solve. We use block hashes to preserve integrity of the block and to explicitly reference the previous block.
+
+2. We will most likely want to use different values for the genisys block then what we have in the master branch.  I am not sure how to 
+    generate the values for the previousHash or the nextHash for the genisys block. -dmp
