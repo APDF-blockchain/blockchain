@@ -75,4 +75,5 @@ https://github.com/collab-uniba/socialcde4eclipse/wiki/How-to-setup-a-GitHub-org
     It should be noted that the block hash has not yet nothing to do with mining, as there is no proof-of-work problem to solve. We use block hashes to preserve integrity of the block and to explicitly reference the previous block.
 
 2. We will most likely want to use different values for the genisys block then what we have in the master branch.  I am not sure how to 
-    generate the values for the previousHash or the nextHash for the genisys block. -dmp
+    generate the values for the timestamp or the nextHash for the genisys block. The timestamp should just be seconds since the UNIX
+    epoch. -dmp
