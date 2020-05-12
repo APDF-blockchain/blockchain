@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node main.js"
+    "build": "tsc",
+    "start": "npm run build && node dist/main.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -14,5 +15,15 @@
   "engines": {
     "node": ">=4.3.2"
   },
+<<<<<<< HEAD
   "devDependencies": {}
+=======
+  "devDependencies": {
+    "@types/crypto-js": "^3.1.45",
+    "@types/express": "^4.17.6",
+    "@types/node": "^13.13.5",
+    "@types/ws": "^7.2.4",
+    "typescript": "^3.8.3"
+  }
+>>>>>>> 58862bb50189cbe2ec5f4a1e448064e0bcbe45e8
 }
