@@ -1,4 +1,9 @@
 node_modules
 npm-debug.log
 .idea
-/dist
+dist/*
+dist/**
+dist/main.js
+dist/main.js
+dist/proof-of-work/proof-of-work.js
+dist/proof-of-work/proof-of-work.js.map
