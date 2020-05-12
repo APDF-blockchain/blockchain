@@ -64,6 +64,7 @@ curl http://localhost:3001/peers
 ```
 
 ### NOTES
+npm start
 
 #### How to setup a GitHub organization, project and team
 
