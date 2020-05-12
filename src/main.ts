@@ -1,3 +1,5 @@
+// This code was cloned from the "Simple Miner with Proof-of-Work in JS Extended" exercise 6 from 
+// MI1OD: Blockchain Essentials - USA Self-paced Sept 2019 assignment
 import CryptoJS from 'Crypto-js';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -106,13 +108,13 @@ const initErrorHandler = (ws) => {
     ws.on('error', () => closeConnection(ws));
 };
 
-// const generateNextBlock = (blockData) => {
-//     const previousBlock = getLatestBlock();
-//     const nextIndex = previousBlock.index + 1;
-//     const nextTimestamp = new Date().getTime() / 1000;
-//     const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, previousBlock.nonce);
-//     return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash, difficulty, ++previousBlock.nonce);
-// };
+const generateNextBlock = (blockData) => {
+    const previousBlock = getLatestBlock();
+    const nextIndex = previousBlock.index + 1;
+    const nextTimestamp = new Date().getTime() / 1000;
+    const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, previousBlock.nonce);
+    return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash, difficulty, this.nonce);
+};
 
 const calculateHashForBlock = (block) => {
     return calculateHash(block.index, block.previousHash, block.timestamp, block.data, block.nonce);

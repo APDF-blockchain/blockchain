@@ -1,3 +1,4 @@
+// These functions were taken from https://lhartikk.github.io/jekyll/update/2017/07/13/chapter2.html
 import { hexToBinary } from '../utils/utils';
 const hashMatchesDifficulty = (hash: string, difficulty: number): boolean => {
     const hashInBinary: string = hexToBinary(hash);

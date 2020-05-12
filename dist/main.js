@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// This code was cloned from the "Simple Miner with Proof-of-Work in JS Extended" exercise 6 from 
+// MI1OD: Blockchain Essentials - USA Self-paced Sept 2019 assignment
 const Crypto_js_1 = __importDefault(require("Crypto-js"));
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const ws_1 = __importDefault(require("ws"));
-console.log('ARGUMENTS ', process.argv);
 const http_port = process.env.HTTP_PORT || 3001;
 const p2p_port = process.env.P2P_PORT || 6001;
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
@@ -90,13 +91,13 @@ const initErrorHandler = (ws) => {
     ws.on('close', () => closeConnection(ws));
     ws.on('error', () => closeConnection(ws));
 };
-// const generateNextBlock = (blockData) => {
-//     const previousBlock = getLatestBlock();
-//     const nextIndex = previousBlock.index + 1;
-//     const nextTimestamp = new Date().getTime() / 1000;
-//     const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, previousBlock.nonce);
-//     return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash, difficulty, ++previousBlock.nonce);
-// };
+const generateNextBlock = (blockData) => {
+    const previousBlock = getLatestBlock();
+    const nextIndex = previousBlock.index + 1;
+    const nextTimestamp = new Date().getTime() / 1000;
+    const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, previousBlock.nonce);
+    return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash, difficulty, this.nonce);
+};
 const calculateHashForBlock = (block) => {
     return calculateHash(block.index, block.previousHash, block.timestamp, block.data, block.nonce);
 };
