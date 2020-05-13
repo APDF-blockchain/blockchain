@@ -66,6 +66,17 @@ curl http://localhost:3001/peers
 ### NOTES
 npm start
 
+#### github
+To solve your problem, first fetch the remote branch:
+
+$ git fetch origin other-branch
+Then merge it into your current branch (I'll assume that's master), and fix any merge conflicts:
+
+$ git merge origin/other-branch
+-# Fix merge conflicts, if they occur
+-# Add merge conflict fixes
+$ git commit    # And commit the merge!
+
 #### How to setup a GitHub organization, project and team
 
 https://github.com/collab-uniba/socialcde4eclipse/wiki/How-to-setup-a-GitHub-organization,-project-and-team
