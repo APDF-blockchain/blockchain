@@ -9,6 +9,7 @@ export class ProofOfWork {
 
     // in blocks
     private DIFFICULTY_ADJUSTMENT_INTERVAL: number = 10;
+    //private DIFFICULTY_ADJUSTMENT_INTERVAL: number = 1;
 
     private utils:Utils = new Utils();
 

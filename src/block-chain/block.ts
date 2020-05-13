@@ -3,11 +3,11 @@ export class Block {
     public hash: string;
     public previousHash: string;
     public timestamp: number;
-    public data: any;
+    public data: string;
     public difficulty: number;
     public nonce: number
 
-    constructor(_index: number, _hash: string, _previousHash: string, _timestamp: number, _data: any, _difficulty: number, _nonce: number) {
+    constructor(_index: number, _hash: string, _previousHash: string, _timestamp: number, _data: string, _difficulty: number, _nonce: number) {
         this.index = _index;
         this.hash = _hash;
         this.previousHash = _previousHash;
