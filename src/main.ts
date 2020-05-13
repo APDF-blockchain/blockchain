@@ -21,7 +21,7 @@ const MessageType = {
 const blockChainObject: BlockChain = new BlockChain();
 const genesisBlock: Block = blockChainObject.getGenesisBlock();
 
-const blockChainArray: Block[] = [genesisBlock];
+//const blockChainArray: Block[] = [genesisBlock];
 
 const initConnection = (ws) => {
     sockets.push(ws);
@@ -60,7 +60,7 @@ const initErrorHandler = (ws) => {
 
 const queryChainLengthMsg = () => ({ 'type': MessageType.QUERY_LATEST });
 const responseChainMsg = () => ({
-    'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockChainArray)
+    'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockChainObject.getBlockchain())
 });
 
 const write = (ws, message) => ws.send(JSON.stringify(message));
@@ -79,10 +79,10 @@ const initHttpServer = () => {
     const app = express();
     app.use(bodyParser.json());
 
-    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainArray)));
+    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainObject.getBlockchain())));
     app.post('/mineBlock', (req, res) => {
-        //const newBlock = genesisBlock.mineBlock(req.body.data);
-        const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
+        const newBlock = blockChainObject.mineBlock(req.body.data);
+        //const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
         blockChainObject.addBlock(newBlock);
         blockChainObject.broadcast(blockChainObject.responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));
@@ -112,7 +112,7 @@ function testApp() {
         }
         console.log();
     }
-    showBlockchain(blockChainArray);
+    showBlockchain(blockChainObject.getBlockchain());
 };
 
 connectToPeers(initialPeers);

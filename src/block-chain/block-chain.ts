@@ -71,6 +71,10 @@ export class BlockChain {
         return this.genesisBlock;
     }
 
+    public getBlockChain() {
+        return this.blockchain;
+    }
+
     public generateNextBlock(blockData: string) {
         const previousBlock: Block = this.getLatestBlock();
         const difficulty: number = this.proofofwork.getDifficulty(this.getBlockchain());
