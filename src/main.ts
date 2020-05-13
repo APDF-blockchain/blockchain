@@ -5,8 +5,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import WebSocket from 'ws';
 
-import { Block } from './block-chain/block';
 import { BlockChain } from './block-chain/block-chain';
+import { Block } from './block-chain/block';
 
 const http_port = process.env.HTTP_PORT || 3001;
 const p2p_port = process.env.P2P_PORT || 6001;
@@ -19,9 +19,6 @@ const MessageType = {
 };
 
 const blockChainObject: BlockChain = new BlockChain();
-const genesisBlock: Block = blockChainObject.getGenesisBlock();
-
-//const blockChainArray: Block[] = [genesisBlock];
 
 const initConnection = (ws) => {
     sockets.push(ws);
@@ -81,8 +78,8 @@ const initHttpServer = () => {
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainObject.getBlockchain())));
     app.post('/mineBlock', (req, res) => {
-        const newBlock = blockChainObject.mineBlock(req.body.data);
-        //const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
+        //const newBlock: Block = blockChainObject.mineBlock(req.body.data);
+        const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
         blockChainObject.addBlock(newBlock);
         blockChainObject.broadcast(blockChainObject.responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));

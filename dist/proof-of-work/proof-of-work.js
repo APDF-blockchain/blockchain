@@ -10,6 +10,7 @@ class ProofOfWork {
         this.BLOCK_GENERATION_INTERVAL = 10;
         // in blocks
         this.DIFFICULTY_ADJUSTMENT_INTERVAL = 10;
+        //private DIFFICULTY_ADJUSTMENT_INTERVAL: number = 1;
         this.utils = new utils_1.Utils();
     }
     hashMatchesDifficulty(hash, difficulty) {

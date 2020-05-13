@@ -1,18 +1,12 @@
 // This code was cloned from the "Simple Miner with Proof-of-Work in JS Extended" exercise 6 from 
 // MI1OD: Blockchain Essentials - USA Self-paced Sept 2019 assignment
 import CryptoJS from 'Crypto-js';
-//import express from 'express';
-//import bodyParser from 'body-parser';
-//import WebSocket from 'ws';
 
 import { Block } from './block';
 import { ProofOfWork } from '../proof-of-work/proof-of-work';
 import { Utils } from '../utils/utils';
+import { removeAllListeners } from 'cluster';
 
-// const http_port = process.env.HTTP_PORT || 3001;
-// const p2p_port = process.env.P2P_PORT || 6001;
-// const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
-const difficulty = 4
 const MessageType = {
     QUERY_LATEST: 0,
     QUERY_ALL: 1,
@@ -20,18 +14,10 @@ const MessageType = {
 }
 
 export class BlockChain {
-    // public index: number;
-    // public hash: string;
-    // public previousHash: string;
-    // public timestamp: number;
-    // public data: any;
-    // public difficulty: number;
-    // public nonce: number;
+    private difficulty: number = 4;
     private blockchain: Block[] = [];
     private genesisBlock: Block;
-    //private proofofwork: ProofOfWork = new ProofOfWork();
     private proofofwork: ProofOfWork;
-    //private utils = new Utils();
     private utils: Utils;
     private sockets = [];
 
@@ -45,34 +31,12 @@ export class BlockChain {
             this.utils = new Utils();
         }
     }
-    // constructor(index: number, hash: string, previousHash: string,
-    //     timestamp: number, data: string, difficulty: number, nonce: number) {
-    //     this.index = index;
-    //     this.previousHash = previousHash;
-    //     this.timestamp = timestamp;
-    //     this.data = data;
-    //     this.hash = hash;
-    //     this.difficulty = difficulty;
-    //     this.nonce = nonce;
-    //     if (this.blockchain.length === 0) {
-    //         this.genesisBlock = new Block(
-    //             0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', '', 1465154705, 'my genesis block!!', 0, 0
-    //         );
-    //         this.blockchain.push(this.genesisBlock);
-    //         this.proofofwork = new ProofOfWork();
-    //         this.utils = new Utils();
-    //     }
-    // }
 
     public addSocket(ws: any) {
         this.sockets.push(ws)
     }
     public getGenesisBlock(): Block {
         return this.genesisBlock;
-    }
-
-    public getBlockChain() {
-        return this.blockchain;
     }
 
     public generateNextBlock(blockData: string) {
@@ -82,8 +46,9 @@ export class BlockChain {
         const nextIndex: number = previousBlock.index + 1;
         const nextTimestamp: number = this.utils.getCurrentTimestamp();
         const newBlock: Block = this.findBlock(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty);
-        this.addBlock(newBlock);
-        this.broadcastLatest();
+        //const newBlock: Block = this.mineBlock(blockData);
+        // this.addBlock(newBlock);
+        // this.broadcastLatest();
         return newBlock;
     }
 
@@ -91,37 +56,19 @@ export class BlockChain {
 
     public getLatestBlock(): Block { return this.blockchain[this.blockchain.length - 1] }
 
-    //const getBlockchain = (): Block[] => blockchain;
-
-    //const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
-
-    // const generateNextBlock = (blockData) => {
-    //     const previousBlock = getLatestBlock();
-    //     const nextIndex = previousBlock.index + 1;
-    //     const nextTimestamp: number = new Date().getTime() / 1000;
-    //     const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty, previousBlock.nonce);
-    //     return new Block(nextIndex, previousBlock.hash, nextTimestamp.toString(), blockData, nextHash, difficulty, this.nonce);
-    // };
-    ;
-
     public calculateHashForBlock(block: Block): string {
-        return this.calculateHash(block.index, block.previousHash, block.timestamp, block.data, difficulty, block.nonce);
+        let rVal: string = this.calculateHash(block.index, block.previousHash, block.timestamp, block.data, block.difficulty, block.nonce);
+        //return this.calculateHash(block.index, block.previousHash, block.timestamp, block.data, difficulty, block.nonce);
+        return rVal;
     }
 
     public calculateHash(index: number, previousHash: string, timestamp: number, data: string, difficulty: number, nonce: string | number | CryptoJS.WordArray): string {
         return CryptoJS.SHA256(index + previousHash + timestamp + difficulty + data, nonce).toString();
     }
 
-    // const findBlock = (index: number, previousHash: string, timestamp: number, data: string, difficulty: number): Block => {
-    //     let nonce = 0;
-    //     while (true) {
-    //         const hash: string = calculateHash(index, previousHash, timestamp, data, difficulty, nonce);
-    //         if (hashMatchesDifficulty(hash, difficulty)) {
-    //             return new Block(index, hash, previousHash, timestamp, data, difficulty, nonce);
-    //         }
-    //         nonce++;
-    //     }
-    // };
+    // public findBlock(index: number, previousHash: string, timestamp: number, data: string, difficulty: number): Block {
+    //     return this.mineBlock(data);
+    // }
     public findBlock(index: number, previousHash: string, timestamp: number, data: string, difficulty: number): Block {
         let nonce = 0;
         while (true) {
@@ -134,12 +81,28 @@ export class BlockChain {
     }
 
     public addBlock(newBlock: Block) {
-        if (this.isValidNewBlock(newBlock, this.getLatestBlock())) {
+        let rVal: boolean = this.isValidNewBlock(newBlock, this.getLatestBlock());
+        //if (this.isValidNewBlock(newBlock, this.getLatestBlock())) {
+        //rVal = true;
+        if (rVal === true) {
             this.blockchain.push(newBlock);
         }
     }
 
+    public isValidBlockStructure(block: Block): boolean {
+        let rVal: boolean = (typeof block.index === 'number'
+            && typeof block.hash === 'string'
+            && typeof block.previousHash === 'string'
+            && typeof block.timestamp === 'number'
+            && typeof block.data === 'string');
+        return rVal
+    }
+
     public isValidNewBlock(newBlock: Block, previousBlock: Block) {
+        if (!this.isValidBlockStructure(newBlock)) {
+            console.log('invalid structure');
+            return false;
+        }
         if (previousBlock.index + 1 !== newBlock.index) {
             console.log('invalid index');
             return false;
@@ -202,14 +165,16 @@ export class BlockChain {
     }
 
     public isValidChain(blockchainToValidate: Block[]): boolean {
-        if (JSON.stringify(blockchainToValidate[0]) !== JSON.stringify(this.getGenesisBlock())) {
+        const isValidGenesis = (block: Block): boolean => {
+            return JSON.stringify(block) === JSON.stringify(this.getGenesisBlock());
+        };
+
+        if (!isValidGenesis(blockchainToValidate[0])) {
             return false;
         }
-        const tempBlocks = [blockchainToValidate[0]];
+
         for (let i = 1; i < blockchainToValidate.length; i++) {
-            if (this.isValidNewBlock(blockchainToValidate[i], tempBlocks[i - 1])) {
-                tempBlocks.push(blockchainToValidate[i]);
-            } else {
+            if (!this.isValidNewBlock(blockchainToValidate[i], blockchainToValidate[i - 1])) {
                 return false;
             }
         }
@@ -220,27 +185,29 @@ export class BlockChain {
         const previousBlock: Block = this.getLatestBlock();
         const nextIndex = previousBlock.index + 1;
         let nonce: number = 0;
-        let nextTimestamp: number = new Date().getTime() / 1000;
-        let nextHash: string = this.calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty, nonce);
-        while (nextHash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+        let nextTimestamp: number = Math.round(new Date().getTime() / 1000);
+        let nextHash: string = this.calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, this.difficulty, nonce);
+        while (nextHash.substring(0, this.difficulty) !== Array(this.difficulty + 1).join("0")) {
             nonce++;
-            nextTimestamp = new Date().getTime() / 1000;
-            nextHash = this.calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty, nonce);
+            nextTimestamp = Math.round(new Date().getTime() / 1000);
+            nextHash = this.calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, this.difficulty, nonce);
             // Modified the console log because the output screws with the terminal.
             console.log("\"index\":" +
                 nextIndex +
                 // ",\"previousHash\":" +
                 // previousBlock.hash +
-                "\"timestamp\":" +
+                ",\"nextHash\":" +
+                nextHash +
+                ",\"timestamp\":" +
                 nextTimestamp +
                 // ",\"data\":" +
                 // blockData +
                 // ",\hex:lb[33mhash: " +
                 // nextHash +
                 // " \x1b(0m," +
-                "\"difficulty\":" +
-                difficulty +
-                " nonce: " +
+                ",\"difficulty\":" +
+                this.difficulty +
+                ", nonce: " +
                 nonce
                 // " \x1b(0m "
             );
@@ -262,6 +229,6 @@ export class BlockChain {
             //     " \x1b(0m "
             // );
         }
-        return new Block(nextIndex, nextHash, previousBlock.hash, nextTimestamp, blockData, difficulty, nonce);
+        return new Block(nextIndex, nextHash, previousBlock.hash, nextTimestamp, blockData, this.difficulty, nonce);
     }
 }
