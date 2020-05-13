@@ -19,7 +19,7 @@ const MessageType = {
 };
 
 const blockChainObject: BlockChain = new BlockChain();
-const genesisBlock: Block = blockChainObject.getGenesisBlock();
+//const genesisBlock: Block = blockChainObject.getGenesisBlock();
 
 //const blockChainArray: Block[] = [genesisBlock];
 

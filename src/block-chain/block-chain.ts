@@ -20,18 +20,9 @@ const MessageType = {
 }
 
 export class BlockChain {
-    // public index: number;
-    // public hash: string;
-    // public previousHash: string;
-    // public timestamp: number;
-    // public data: any;
-    // public difficulty: number;
-    // public nonce: number;
     private blockchain: Block[] = [];
     private genesisBlock: Block;
-    //private proofofwork: ProofOfWork = new ProofOfWork();
     private proofofwork: ProofOfWork;
-    //private utils = new Utils();
     private utils: Utils;
     private sockets = [];
 
@@ -45,24 +36,6 @@ export class BlockChain {
             this.utils = new Utils();
         }
     }
-    // constructor(index: number, hash: string, previousHash: string,
-    //     timestamp: number, data: string, difficulty: number, nonce: number) {
-    //     this.index = index;
-    //     this.previousHash = previousHash;
-    //     this.timestamp = timestamp;
-    //     this.data = data;
-    //     this.hash = hash;
-    //     this.difficulty = difficulty;
-    //     this.nonce = nonce;
-    //     if (this.blockchain.length === 0) {
-    //         this.genesisBlock = new Block(
-    //             0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', '', 1465154705, 'my genesis block!!', 0, 0
-    //         );
-    //         this.blockchain.push(this.genesisBlock);
-    //         this.proofofwork = new ProofOfWork();
-    //         this.utils = new Utils();
-    //     }
-    // }
 
     public addSocket(ws: any) {
         this.sockets.push(ws)
@@ -91,19 +64,6 @@ export class BlockChain {
 
     public getLatestBlock(): Block { return this.blockchain[this.blockchain.length - 1] }
 
-    //const getBlockchain = (): Block[] => blockchain;
-
-    //const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
-
-    // const generateNextBlock = (blockData) => {
-    //     const previousBlock = getLatestBlock();
-    //     const nextIndex = previousBlock.index + 1;
-    //     const nextTimestamp: number = new Date().getTime() / 1000;
-    //     const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty, previousBlock.nonce);
-    //     return new Block(nextIndex, previousBlock.hash, nextTimestamp.toString(), blockData, nextHash, difficulty, this.nonce);
-    // };
-    ;
-
     public calculateHashForBlock(block: Block): string {
         return this.calculateHash(block.index, block.previousHash, block.timestamp, block.data, difficulty, block.nonce);
     }
@@ -112,16 +72,6 @@ export class BlockChain {
         return CryptoJS.SHA256(index + previousHash + timestamp + difficulty + data, nonce).toString();
     }
 
-    // const findBlock = (index: number, previousHash: string, timestamp: number, data: string, difficulty: number): Block => {
-    //     let nonce = 0;
-    //     while (true) {
-    //         const hash: string = calculateHash(index, previousHash, timestamp, data, difficulty, nonce);
-    //         if (hashMatchesDifficulty(hash, difficulty)) {
-    //             return new Block(index, hash, previousHash, timestamp, data, difficulty, nonce);
-    //         }
-    //         nonce++;
-    //     }
-    // };
     public findBlock(index: number, previousHash: string, timestamp: number, data: string, difficulty: number): Block {
         let nonce = 0;
         while (true) {
@@ -231,16 +181,18 @@ export class BlockChain {
                 nextIndex +
                 // ",\"previousHash\":" +
                 // previousBlock.hash +
-                "\"timestamp\":" +
-                nextTimestamp +
+                ",\"nextHash\":" +
+                nextHash +
+                // ",\"timestamp\":" +
+                // nextTimestamp +
                 // ",\"data\":" +
                 // blockData +
                 // ",\hex:lb[33mhash: " +
                 // nextHash +
                 // " \x1b(0m," +
-                "\"difficulty\":" +
+                ",\"difficulty\":" +
                 difficulty +
-                " nonce: " +
+                ", nonce: " +
                 nonce
                 // " \x1b(0m "
             );
