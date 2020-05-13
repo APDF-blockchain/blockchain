@@ -21,7 +21,7 @@ const MessageType = {
 };
 const blockChainObject = new block_chain_1.BlockChain();
 const genesisBlock = blockChainObject.getGenesisBlock();
-const blockChainArray = [genesisBlock];
+//const blockChainArray: Block[] = [genesisBlock];
 const initConnection = (ws) => {
     sockets.push(ws);
     blockChainObject.addSocket(ws);
@@ -56,7 +56,7 @@ const initErrorHandler = (ws) => {
 };
 const queryChainLengthMsg = () => ({ 'type': MessageType.QUERY_LATEST });
 const responseChainMsg = () => ({
-    'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockChainArray)
+    'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockChainObject.getBlockchain())
 });
 const write = (ws, message) => ws.send(JSON.stringify(message));
 const connectToPeers = (newPeers) => {
@@ -68,13 +68,34 @@ const connectToPeers = (newPeers) => {
         });
     });
 };
+// const initHttpServer = () => {
+//     const app = express();
+//     app.use(bodyParser.json());
+//     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainArray)));
+//     app.post('/mineBlock', (req, res) => {
+//         //const newBlock = blockChainObject.mineBlock(req.body.data);
+//         const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
+//         blockChainObject.addBlock(newBlock);
+//         blockChainObject.broadcast(blockChainObject.responseLatestMsg());
+//         console.log('block added: ' + JSON.stringify(newBlock));
+//         res.send();
+//     });
+//     app.get('/peers', (req, res) => {
+//         res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
+//     });
+//     app.post('/addPeer', (req, res) => {
+//         connectToPeers([req.body.peer]);
+//         res.send();
+//     });
+//     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
+// };
 const initHttpServer = () => {
     const app = express_1.default();
     app.use(body_parser_1.default.json());
-    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainArray)));
+    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockChainObject.getBlockchain())));
     app.post('/mineBlock', (req, res) => {
-        //const newBlock = genesisBlock.mineBlock(req.body.data);
-        const newBlock = blockChainObject.generateNextBlock(req.body.data);
+        const newBlock = blockChainObject.mineBlock(req.body.data);
+        //const newBlock: Block = blockChainObject.generateNextBlock(req.body.data);
         blockChainObject.addBlock(newBlock);
         blockChainObject.broadcast(blockChainObject.responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));
@@ -101,7 +122,7 @@ function testApp() {
         }
         console.log();
     }
-    showBlockchain(blockChainArray);
+    showBlockchain(blockChainObject.getBlockchain());
 }
 ;
 connectToPeers(initialPeers);
