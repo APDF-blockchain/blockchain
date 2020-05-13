@@ -5,7 +5,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import WebSocket from 'ws';
 
-import { Block } from './block-chain/block';
 import { BlockChain } from './block-chain/block-chain';
 
 const http_port = process.env.HTTP_PORT || 3001;
@@ -19,9 +18,6 @@ const MessageType = {
 };
 
 const blockChainObject: BlockChain = new BlockChain();
-//const genesisBlock: Block = blockChainObject.getGenesisBlock();
-
-//const blockChainArray: Block[] = [genesisBlock];
 
 const initConnection = (ws) => {
     sockets.push(ws);
