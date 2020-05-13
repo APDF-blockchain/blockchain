@@ -1,19 +1,12 @@
 // This code was cloned from the "Simple Miner with Proof-of-Work in JS Extended" exercise 6 from 
 // MI1OD: Blockchain Essentials - USA Self-paced Sept 2019 assignment
 import CryptoJS from 'Crypto-js';
-//import express from 'express';
-//import bodyParser from 'body-parser';
-//import WebSocket from 'ws';
 
 import { Block } from './block';
 import { ProofOfWork } from '../proof-of-work/proof-of-work';
 import { Utils } from '../utils/utils';
 import { removeAllListeners } from 'cluster';
 
-// const http_port = process.env.HTTP_PORT || 3001;
-// const p2p_port = process.env.P2P_PORT || 6001;
-// const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
-//const difficulty = 1;
 const MessageType = {
     QUERY_LATEST: 0,
     QUERY_ALL: 1,
