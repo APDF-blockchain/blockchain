@@ -1,4 +1,4 @@
-// These functions were taken from https://lhartikk.github.io/jekyll/update/2017/07/13/chapter3.html
+// These functions were taken from https://lhartikk.github.io/jekyll/update/2017/07/12/chapter3.html
 
 import * as CryptoJS from 'crypto-js';
 import * as ecdsa from 'elliptic';
